@@ -3,10 +3,10 @@
 	desc = "A handheld emergency defibrillator, used to restore fibrillating patients. Can optionally bring people back from the dead."
 	icon = 'icons/obj/items/defibrillator.dmi'
 	icon_state = "defib_full"
-	item_state = "defib"
-	flags_atom = CONDUCT
-	flags_item = NOBLUDGEON
-	flags_equip_slot = ITEM_SLOT_BELT
+	worn_icon_state = "defib"
+	atom_flags = CONDUCT
+	item_flags = NOBLUDGEON
+	equip_slot_flags = ITEM_SLOT_BELT
 	force = 5
 	throwforce = 6
 	w_class = WEIGHT_CLASS_NORMAL
@@ -197,7 +197,7 @@
 		user.visible_message(span_warning("[icon2html(src, viewers(user))] \The [src] buzzes: Patient's organs are too damaged to sustain life. Deliver patient to a MD for surgical intervention."))
 		return
 
-	if((H.wear_suit && H.wear_suit.flags_atom & CONDUCT))
+	if((H.wear_suit && H.wear_suit.atom_flags & CONDUCT))
 		user.visible_message(span_warning("[icon2html(src, viewers(user))] \The [src] buzzes: Paddles registering >100,000 ohms, Possible cause: Suit or Armor interferring."))
 		return
 
@@ -231,7 +231,7 @@
 	H.visible_message(span_danger("[H]'s body convulses a bit."))
 	defib_cooldown = world.time + 10 //1 second cooldown before you can shock again
 
-	if(H.wear_suit && H.wear_suit.flags_atom & CONDUCT)
+	if(H.wear_suit && H.wear_suit.atom_flags & CONDUCT)
 		user.visible_message(span_warning("[icon2html(src, viewers(user))] \The [src] buzzes: Defibrillation failed: Paddles registering >100,000 ohms, Possible cause: Suit or Armor interferring."))
 		return
 
@@ -301,7 +301,7 @@
 	playsound(get_turf(src), 'sound/items/defib_success.ogg', 35, 0)
 	H.set_stat(UNCONSCIOUS)
 	H.emote("gasp")
-	H.chestburst = 0 //reset our chestburst state
+	H.chestburst = CARBON_NO_CHEST_BURST
 	H.regenerate_icons()
 	H.reload_fullscreens()
 	H.flash_act()
@@ -336,7 +336,7 @@
 	name = "emergency defibrillator"
 	desc = "A handheld emergency defibrillator, used to restore fibrillating patients. Can optionally bring people back from the dead. Appears to be a civillian model."
 	icon_state = "civ_defib_full"
-	item_state = "defib"
+	worn_icon_state = "defib"
 
 /obj/item/defibrillator/internal
 	icon = 'icons/obj/clothing/gloves.dmi' //even though you'll never see this directly, it shows up in the chat panel due to icon2html
@@ -363,10 +363,10 @@
 	name = "advanced medical combat gloves"
 	desc = "Advanced medical gloves, these include small electrodes to defibrilate a patient No more bulky units!"
 	icon_state = "defib_out_full"
-	item_state = "defib_gloves"
+	worn_icon_state = "defib_gloves"
 	soft_armor = list(MELEE = 25, BULLET = 15, LASER = 10, ENERGY = 15, BOMB = 15, BIO = 5, FIRE = 15, ACID = 15)
-	flags_cold_protection = HANDS
-	flags_heat_protection = HANDS
+	cold_protection_flags = HANDS
+	heat_protection_flags = HANDS
 	min_cold_protection_temperature = GLOVES_MIN_COLD_PROTECTION_TEMPERATURE
 	max_heat_protection_temperature = GLOVES_MAX_HEAT_PROTECTION_TEMPERATURE
 	///The internal defib item

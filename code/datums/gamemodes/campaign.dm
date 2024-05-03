@@ -1,7 +1,7 @@
 /datum/game_mode/hvh/campaign
 	name = "Campaign"
 	config_tag = "Campaign"
-	flags_round_type = MODE_TWO_HUMAN_FACTIONS|MODE_HUMAN_ONLY
+	round_type_flags = MODE_TWO_HUMAN_FACTIONS|MODE_HUMAN_ONLY
 	whitelist_ship_maps = list(MAP_ITERON)
 	whitelist_ground_maps = list(MAP_FORT_PHOBOS)
 	bioscan_interval = 3 MINUTES
@@ -17,7 +17,7 @@
 		/datum/job/som/squad/standard = -1,
 		/datum/job/som/squad/medic = 8,
 		/datum/job/som/squad/engineer = 4,
-		/datum/job/som/squad/veteran = 2,
+		/datum/job/som/squad/veteran = 4,
 		/datum/job/som/squad/leader = 4,
 		/datum/job/som/command/fieldcommander = 1,
 		/datum/job/som/command/staffofficer = 2,
@@ -123,6 +123,11 @@
 		if((source.faction != stat_list[i].faction) && (source.faction != FACTION_NEUTRAL))
 			continue
 		stat_list[i].get_status_tab_items(source, items)
+
+/datum/game_mode/hvh/campaign/deploy_point_activated(datum/source, mob/living/user)
+	if(!stat_list[user.faction])
+		return
+	current_mission.get_mission_deploy_message(user)
 
 /datum/game_mode/hvh/campaign/ghost_verbs(mob/dead/observer/observer)
 	return list(/datum/action/campaign_overview, /datum/action/campaign_loadout)
@@ -274,7 +279,7 @@
 			if(!SSticker)
 				return
 			var/mob/candidate = locate(href_list["player"])
-			if(!candidate.client)
+			if(!candidate?.client)
 				return
 
 			if(!GLOB.enter_allowed)
@@ -289,7 +294,7 @@
 
 			if(!attrition_respawn(ready_candidate, job_datum))
 				ready_candidate.mind.transfer_to(candidate)
-				ready_candidate.client.screen.Cut()
+				ready_candidate?.client?.screen?.Cut()
 				qdel(ready_candidate)
 				return
 			if(isobserver(candidate))
